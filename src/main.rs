@@ -12,7 +12,6 @@ struct WeatherResponse {
 }
 
 // Struct for weather description
-
 #[derive(Deserialize, Debug)]
 struct Weather {
     description: String,
@@ -33,7 +32,6 @@ struct Wind {
 }
 
 // Get Weather from API
-
 fn get_weather_info(
     city: &str,
     country_code: &str,
@@ -140,7 +138,7 @@ fn main() {
         }
         println!(
             "{}",
-            "Do you want to search for weather in another city? (Yes/Nope):".purple()
+            "Do you want to search for weather in another city? (yes/no):".purple()
         ); // Prompting user to continue or exit
         let mut input = String::new();
         io::stdin()
@@ -148,7 +146,7 @@ fn main() {
             .expect("Cannot get the input");
         let input = input.trim().to_lowercase();
 
-        if input != "Yes" {
+        if input != "yes" {
             println!("Cool! Come back if you wanna check the weather in you area!");
             break;
         }
