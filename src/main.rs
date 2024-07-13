@@ -31,3 +31,20 @@ struct Main {
 struct Wind {
     speed: f64,
 }
+
+// Get Weather from API
+
+fn getWeatherInfo(
+    city: &str,
+    country_code: &str,
+    api_key: &str,
+) -> Result<WeatherResponse, reqwest::Error> {
+    let url: string = format!(
+        "http://api.openweathermap.org/data/2.5/weather?q={},{}&units=metric&appid={}",
+        city, country_code, api_key
+    );
+
+    let response = reqwest::blocking::get(&url)?;
+    let response_json: WeatherResponse = Response.json::<WeatherResponse>?;
+    Ok(response_json);
+}
