@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  weather-cli:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/usr/src/app
+    environment:
+      - RUST_BACKTRACE=1
+    stdin_open: true
+    tty: true
