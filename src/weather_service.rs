@@ -1,5 +1,5 @@
-use crate::domain::models::{ApiClient, WeatherResponse};
-use crate::infrastructure::api_client::ApiClient;
+use crate::api_client::ApiClient;
+use crate::model::WeatherResponse;
 
 pub struct WeatherService {
     api_client: ApiClient,
@@ -12,11 +12,11 @@ impl WeatherService {
         }
     }
 
-    pub fn get_weather_info(
+    pub async fn get_weather_info(
         &self,
         city: &str,
         country_code: &str,
     ) -> Result<WeatherResponse, reqwest::Error> {
-        self.api_client.fetch_weather(city, country_code)
+        self.api_client.fetch_weather(city, country_code).await
     }
 }

@@ -1,8 +1,8 @@
 use colored::*;
 use std::io;
 
-use crate::application::weather_service::WeatherService;
-use crate::domain::models::WeatherResponse;
+use crate::model::WeatherResponse;
+use crate::weather_service::WeatherService;
 
 pub struct Cli {
     weather_service: WeatherService,

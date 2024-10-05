@@ -1,4 +1,4 @@
-use crate::domain::models::WeatherResponse;
+use crate::model::WeatherResponse;
 
 pub struct ApiClient {
     api_key: String,
@@ -9,7 +9,7 @@ impl ApiClient {
         Self { api_key }
     }
 
-    pub fn fetch_weather(
+    pub async fn fetch_weather(
         &self,
         city: &str,
         country_code: &str,
@@ -19,8 +19,8 @@ impl ApiClient {
             city, country_code, self.api_key
         );
 
-        let response = reqwest::blocking::get(&url)?;
-        let response_json = response.json::<WeatherResponse>()?;
+        let response = reqwest::get(&url).await?;
+        let response_json = response.json::<WeatherResponse>().await?;
         Ok(response_json)
     }
 }

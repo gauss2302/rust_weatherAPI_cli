@@ -1,18 +1,12 @@
 mod api_client;
-mod cli;
+mod app;
 mod model;
 mod weather_service;
 
-use crate::cli::Cli;
-use dotenv::dotenv;
-use std::env;
+use app::App;
 
 fn main() {
-    dotenv().ok();
-
-    let api_key =
-        env::var("OPENWEATHER_API_KEY").expect("OPENWEATHER_API_KEY must be set in .env file");
-
-    let cli = Cli::new(api_key);
-    cli.run();
+    console_error_panic_hook::set_once();
+    _ = console_log::init_with_level(log::Level::Debug);
+    leptos::mount_to_body(App);
 }

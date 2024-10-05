@@ -1,26 +1,37 @@
 # Use the official Rust image as a parent image
-FROM rust:1.75-slim-buster as builder
+FROM rust:1.74 as builder
 
 # Set the working directory in the container
 WORKDIR /usr/src/app
 
-# Copy the current directory contents into the container
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+   pkg-config \
+   libssl-dev \
+   nodejs \
+   npm
+
+# Install trunk and add wasm32-unknown-unknown target
+RUN cargo install trunk && \
+   rustup target add wasm32-unknown-unknown
+
+# Copy the entire project
 COPY . .
 
-# Install dependencies
-RUN apt-get update && apt-get install -y pkg-config libssl-dev
-
 # Build the application
-RUN cargo build --release
+RUN trunk build --release
 
-# Start a new stage for a smaller final image
-FROM debian:buster-slim
+# Use a lightweight server to serve the static files
+FROM nginx:alpine
 
-# Install OpenSSL
-RUN apt-get update && apt-get install -y libssl1.1 ca-certificates && rm -rf /var/lib/apt/lists/*
+# Copy the built files from the builder stage
+COPY --from=builder /usr/src/app/dist /usr/share/nginx/html
 
-# Copy the binary from the builder stage
-COPY --from=builder /usr/src/app/target/release/weather_cli_project /usr/local/bin/weather_cli_project
+# Copy a custom nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Set the startup command to run your binary
-CMD ["weather_cli_project"]
+# Expose port 80
+EXPOSE 80
+
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
